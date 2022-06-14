@@ -1,4 +1,21 @@
 {
+  "name": "akasakaid.github.io",
+  "version": "1.0.0",
+  "description": "my github page",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akasakaid/akasakaid.github.io.git"
+  },
+  "author": "AkasakaID",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akasakaid/akasakaid.github.io/issues"
+  },
+  "homepage": "https://github.com/akasakaid/akasakaid.github.io#readme",
   "devDependencies": {
     "tailwindcss": "^3.0.24"
   }

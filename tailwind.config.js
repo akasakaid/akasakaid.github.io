@@ -1,7 +1,15 @@
 module.exports = {
-  content: ["*.html"],
+  content: ['index.html'],
   theme: {
-    extend: {},
+    container:{
+      center: true,
+      padding: '16px',
+    },
+    extend: {
+      screens: {
+        '2xl': '1280px',
+      },
+    },
   },
   plugins: [],
 }
