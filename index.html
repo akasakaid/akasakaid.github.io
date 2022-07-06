@@ -1,152 +1,18 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>My Portfolio</title>
+        <title>My Profile</title>
         <link href="dist/output.css" rel="stylesheet">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body>
-        <header class="bg-transparent absolute top-0 left-0 w-full flex items-center z-10">
-            <div class="container">
-                <div class="flex items-center justify-between relative">
-                    <div class="p-3">
-                        <a href="#home" class="font-bold text-lg text-violet-800 block py-6 lg:text-2xl">AkasakaID</a>
-                    </div>
-                    <div class="flex items-center px-4">
-                        <button id="hamburger" name="hamburger" type="button" class="block absolute right-4 lg:hidden">
-                            <span class="w-[30px] h-[2px] my-2 block bg-black transition duration-300 ease-in-out origin-top-left"></span>
-                            <span class="w-[30px] h-[2px] my-2 block bg-black transition duration-300 ease-in-out"></span>
-                            <span class="w-[30px] h-[2px] my-2 block bg-black transition duration-300 ease-in-out origin-bottom-left"></span>
-                        </button>
-                        <nav id="menu" class="hidden absolute py-5 bg-white shadow-lg rounded-lg max-w-[250px] w-full right-4 top-full lg:block lg:static lg:bg-transparent lg:max-w-full lg:shadow-none lg:rounded-none">
-                            <ul class="block lg:flex">
-                                <li class="group">
-                                    <a href="#home" class="text-base py-2 mx-8 flex text-black hover:text-violet-700">Home</a>
-                                </li>
-                                <li class="group">
-                                    <a href="#about" class="text-base py-2 mx-8 flex text-black hover:text-violet-700">About </a>
-                                </li>
-                                <li class="group">
-                                    <a href="#portfolio" class="text-base py-2 mx-8 flex text-black hover:text-violet-700">Portofolio</a>
-                                </li>
-                                <li class="group">
-                                    <a href="#contact" class="text-base py-2 mx-8 flex text-black hover:text-violet-700">Contact me</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- start of home section-->
-        <section id="home" class="pt-36">
-            <div class="container">
-                <div class="flex flex-wrap">
-                    <div class="w-full self-center px-10 lg:w-1/2">
-                        <h1 class="block text-base font-semibold text-violet-700 md:text-xl lg:text-2xl">Hallo Semuanya, Saya <span class="block font-bold text-4xl mt-1 md:text-5xl">AkasakaID</span></h1>
-                        <h2 class="font-medium text-lg text-violet-500 mb-4 lg:text-2xl">Just Human</h2>
-                        <p class="font-medium leading-relaxed text-violet-800 mb-8">Watashi Pengen jadi animeh!</p>
-                        <a href="#" class="text-base font-semibold bg-violet-600 text-white hover:shadow-lg hover:bg-violet-500 rounded-full py-3 px-8 ease-in-out transition duration-300">Hubungi watashi</a>
-                    </div>
-                    <div class="w-full self-end px-10 lg:w-1/2">
-                        <div class="relative mt-10 lg:mt-9 lg:right-0">
-                            <img src="dist/img/mine.png" alt="mine" class="max-w-full mx-auto"/>
-                            <span class="absolute -bottom-0 -z-10 left-1/2 -translate-x-1/2">
-                                <svg width="300" height="300" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                                <path fill="#6d28d9" d="M65.4,-21.1C74.5,7,64.8,41.4,42.6,57.1C20.5,72.8,-14.1,69.9,-37.6,52.7C-61,35.4,-73.3,3.8,-65.2,-22.8C-57.1,-49.4,-28.5,-71,-0.2,-70.9C28.1,-70.9,56.2,-49.1,65.4,-21.1Z" transform="translate(100 100)" />
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
+    <body class="bg-purple-400">
+        <section id="my-profile">
+            <div class="container bg-white mt-36 shadow-2xl rounded-lg">
+                <p class="text-6xl text-center mb-6">My Profile</p>
+                <div class="mx-auto flex justify-center">
+                    <img src="https://avatars.githubusercontent.com/u/55008381?v=4" class="rounded-full shadow-lg" width="250">
                 </div>
             </div>
         </section>
-        <!-- end hero sction-->
-
-        <!-- start about section-->
-        <section id="about" class="pt-36 pb-32">
-            <div class="container">
-                <div class="flex flex-wrap">
-                    <div class="w-full px-4 mb-10 lg:w-1/2">
-                        <h3 class="font-semibold text-2xl mb-4 text-violet-700 lg:pt-10 lg:text-3xl">About Me</h3>
-                        <p class="font-medium text-base text-violet-500 max-w-xl lg:text-lg">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi sapiente nobis autem iusto ratione, perspiciatis quia!</p>
-                    </div>
-                    <div class="w-full px-4 lg:w-1/2">
-                        <h3 class="font-semibold text-2xl mb-4 lg:text-3xl lg:pt-10">Lets be friends !</h3>
-                        <p class="font-medium text-base text-violet-500 mb-7 lg:text-lg">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A quos quo quis nemo magnam nam deleniti sint quidem.</p>
-                        <div class="flex items-center">
-                            <!-- youtube-->
-                            <a href="https://www.youtube.com/channel/UCTjTQErgDA79Owo6tnYN0PQ" target="_blank" class="w-9 mr-3 h-9 rounded-full flex justify-center items-center">
-                                <svg role="img" width="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>YouTube</title><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                            </a>
-                            <a href="https://twitter.com/fawatashi" target="_blank" class="w-9 mr-3 h-9 rounded-full flex justify-center items-center">
-                                <svg role="img" width="20"viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Twitter</title><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
-                            </a>
-                            <a href="https://facebook.com/akasakaidn" target="_blank" class="w-9 mr-3 h-9 rounded-full flex justify-center items-center">
-                                <svg role="img" width="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Facebook</title><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                            </a>
-                            <a href="https://github.com/AkasakaID" target="_blank" class="w-9 mr-3 h-9 rounded-full flex justify-center items-center">
-                                <svg role="img" width="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- end of about section -->
-
-        <!-- start portfolio section-->
-        <section id="portfolio" class="pt-36 pb-16 bg-violet-400">
-            <div class="container">
-                <div class="max-w-xl mx-auto text-center mb-16">
-                    <h3 class="font-semibold text-xl text-violet-700 mb-2">Portfolio</h3>
-                    <h2 class="font-bold text-black text-2xl mb-4">New Project</h2>
-                    <p class="font-medium text-violet-600 text-sm">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus ducimus illum facilis ab, provident cupiditate veritatis!</p>
-                </div>
-            </div>
-
-            <div class="w-full px-4 flex flex-wrap justify-center xl:w-10/12 xl:mx-auto">
-                <div class="mb-12 p-4 md:w-1/2">
-                    <div class="rounded-md shadow-md overflow-hidden ">
-                        <img src="dist/img/1.png" alt="Tiktok Downloader" width="w-full">
-                    </div>
-                    <h3>Tiktok Downloader</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam laborum error et consequatur nam velit.</p>
-                </div>
-                <div class="mb-12 p-4 md:w-1/2">
-                    <div class="rounded-md shadow-md overflow-hidden ">
-                        <img src="dist/img/1.png" alt="Tiktok Downloader" width="w-full">
-                    </div>
-                    <h3>Tiktok Downloader</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam laborum error et consequatur nam velit.</p>
-                </div>
-                <div class="mb-12 p-4 md:w-1/2">
-                    <div class="rounded-md shadow-md overflow-hidden ">
-                        <img src="dist/img/1.png" alt="Tiktok Downloader" width="w-full">
-                    </div>
-                    <h3>Tiktok Downloader</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam laborum error et consequatur nam velit.</p>
-                </div>
-                <div class="mb-12 p-4 md:w-1/2">
-                    <div class="rounded-md shadow-md overflow-hidden ">
-                        <img src="dist/img/1.png" alt="Tiktok Downloader" width="w-full">
-                    </div>
-                    <h3>Tiktok Downloader</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam laborum error et consequatur nam velit.</p>
-                </div>
-                <div class="mb-12 p-4 md:w-1/2">
-                    <div class="rounded-md shadow-md overflow-hidden ">
-                        <img src="dist/img/1.png" alt="Tiktok Downloader" width="w-full">
-                    </div>
-                    <h3>Tiktok Downloader</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam laborum error et consequatur nam velit.</p>
-                </div>
-            </div>
-        </section>
-        <!-- end portfolio section-->
-
-    <script src="dist/js/script.js">
-    </script>
     </body>
 </html>
