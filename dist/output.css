@@ -603,6 +603,10 @@ video {
   margin-left: 11rem;
 }
 
+.mr-52 {
+  margin-right: 13rem;
+}
+
 .flex {
   display: flex;
 }
