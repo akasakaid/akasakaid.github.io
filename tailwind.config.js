@@ -8,7 +8,7 @@ module.exports = {
     },
     extend: {
       width:{
-        'aku':'650px'
+        'aku':'630px'
       }
     },
   },
