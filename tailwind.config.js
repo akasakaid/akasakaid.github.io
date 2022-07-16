@@ -6,7 +6,11 @@ module.exports = {
       comfortaa: 'Comfortaa',
       arial: 'Arial'
     },
-    extend: {},
+    extend: {
+      width:{
+        'aku':'650px'
+      }
+    },
   },
   plugins: [],
 }
