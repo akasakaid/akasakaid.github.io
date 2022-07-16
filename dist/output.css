@@ -1,5 +1,5 @@
 /*
-! tailwindcss v3.1.5 | MIT License | https://tailwindcss.com
+! tailwindcss v3.1.6 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -587,12 +587,16 @@ video {
   margin-top: 0.25rem;
 }
 
-.w-9\/12 {
-  width: 75%;
+.mt-20 {
+  margin-top: 5rem;
 }
 
-.justify-center {
-  justify-content: center;
+.mt-16 {
+  margin-top: 4rem;
+}
+
+.max-w-screen-sm {
+  max-width: 640px;
 }
 
 .rounded-md {
@@ -625,12 +629,24 @@ video {
   padding-left: 1.75rem;
 }
 
+.pr-5 {
+  padding-right: 1.25rem;
+}
+
+.pr-8 {
+  padding-right: 2rem;
+}
+
+.pr-7 {
+  padding-right: 1.75rem;
+}
+
 .text-center {
   text-align: center;
 }
 
-.font-comfortaa {
-  font-family: Comfortaa;
+.font-arial {
+  font-family: Arial;
 }
 
 .text-2xl {

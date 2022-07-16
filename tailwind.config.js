@@ -3,7 +3,8 @@ module.exports = {
   content: ['index.html'],
   theme: {
     fontFamily: {
-      comfortaa: 'Comfortaa'
+      comfortaa: 'Comfortaa',
+      arial: 'Arial'
     },
     extend: {},
   },
