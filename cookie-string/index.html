@@ -1,11 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cookie String</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
 </head>
+
 <body>
-    
+    <section class="p-3">
+        <div class="container">
+            <div class="align-text-center">
+                <h3 class="mt-3 mb-4">String Cookie</h3>
+                <form class="form-group">
+                    <div class="mb-3">
+                        <textarea style="width: 70%;" class="form-control" name="cookie" id="cookie" cols="10" rows="10"
+                            placeholder="Paste cookie here "></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <a id="convert-button" class="btn btn-primary shadow">Convert</a>
+                    </div>
+                </form>
+                <h3>Result</h3>
+                <form class="form-group">
+                    <div class="mb-3">
+                        <textarea style="width: 70%;" class="form-control" name="result-cookie" id="result-cookie"
+                            cols="10" rows="10" disabled></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <a id="copy-button" class="btn btn-primary shadow">Copy</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <script src="./assets/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('convert-button').addEventListener('click', function (e) {
+            try {
+
+                var cookie = document.querySelector('#cookie')
+                var cookie_parse = JSON.parse(cookie.value);
+                // console.log(cookie_parse.length)
+                var string_cookie = ""
+                cookie_parse.forEach(element => {
+                    string_cookie += element.name + "=" + element.value + "; "
+                });
+                var result_textarea = document.querySelector('#result-cookie')
+                result_textarea.value = string_cookie
+            } catch (error) {
+                alert(error)
+            }
+        })
+
+        document.querySelector('#copy-button').addEventListener('click', function (e) {
+            var result_textarea = document.querySelector('#result-cookie')
+            console.log(result_textarea.value)
+            result_textarea.select()
+            var success = document.execCommand("copy")
+        })
+    </script>
+    <footer class="p-3 m-3">
+        <p>made by ❤ <a href="http://youtube.com/@fawwazthoerif" target="_blank">Fawwaz Thoerif</a></p>
+    </footer>
 </body>
+
 </html>
