@@ -19,8 +19,7 @@
         <h1 class="text-center mb-4">Query Parser</h1>
         <div class="row">
             <div class="col-md">
-                <textarea id="inputText" class="form-control min-vh-50"
-                    placeholder="Input Your Raw Query Here"></textarea>
+                <textarea id="inputText" class="form-control" placeholder="Input Your Raw Query Here"></textarea>
             </div>
         </div>
         <div class="row">
@@ -30,7 +29,7 @@
         </div>
         <div class="row">
             <div class="col-md">
-                <textarea id="outputText" class="form-control min-vh-50" readonly></textarea>
+                <textarea id="outputText" class="form-control" readonly></textarea>
                 <button id="copyBtn" class="btn btn-secondary mt-2">Copy Result</button>
             </div>
 
@@ -48,19 +47,15 @@
             const copyBtn = document.getElementById('copyBtn');
 
             convertBtn.addEventListener('click', function () {
-                // Contoh konversi: mengubah teks menjadi huruf besar
-                // Anda bisa mengganti ini dengan fungsi konversi yang Anda inginkan
-                // outputText.value = inputText.value.toUpperCase();
                 let isi = inputText.value.split('#tgWebAppData=')[1].split('&tgWebAppVersion=')[0]
                 let isi_decode = decodeURIComponent(isi)
                 outputText.value = isi_decode
-                // console.log(inputText.value)
             });
 
             copyBtn.addEventListener('click', function () {
                 outputText.select();
                 document.execCommand('copy');
-                alert('Teks berhasil disalin!');
+                alert('result is copied successfully.');
             });
         });
     </script>
