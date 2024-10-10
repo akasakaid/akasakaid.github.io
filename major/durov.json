@@ -154,5 +154,11 @@
         "choice_2": 5,
         "choice_3": 6,
         "choice_4": 7
+    },
+    "2024-10-10": {
+        "choice_1": 4,
+        "choice_2": 3,
+        "choice_3": 2,
+        "choice_4": 1
     }
 }
