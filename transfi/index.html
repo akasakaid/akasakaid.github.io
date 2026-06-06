@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Transfi Buy Link Builder</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f1115;
+    --card: #171a21;
+    --card-2: #1f232c;
+    --border: #2a2f3a;
+    --text: #e6e8ec;
+    --muted: #8a90a0;
+    --accent: #4f8cff;
+    --accent-2: #6aa0ff;
+    --ok: #2ecc71;
+    --warn: #f1c40f;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: radial-gradient(1200px 600px at 10% -10%, #1a2138 0%, transparent 60%),
+                radial-gradient(900px 500px at 110% 10%, #1a2a2a 0%, transparent 60%),
+                var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 32px 16px;
+    line-height: 1.5;
+  }
+
+  .container { max-width: 760px; margin: 0 auto; }
+
+  header { margin-bottom: 24px; }
+  header h1 {
+    font-size: 24px; font-weight: 700; letter-spacing: -0.01em;
+  }
+  header p {
+    color: var(--muted); font-size: 14px; margin-top: 4px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .card h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-size: 12px; color: var(--muted); font-weight: 500;
+  }
+  .field .static {
+    background: var(--card-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px;
+    color: var(--text);
+    word-break: break-all;
+  }
+  .field input {
+    background: var(--card-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: var(--text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .field input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.18);
+  }
+  .field .hint {
+    font-size: 11px; color: var(--muted);
+  }
+  .field .hint.error { color: #ff6b6b; }
+
+  .field.full { grid-column: 1 / -1; }
+
+  .preview {
+    background: #0b0d12;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px;
+    color: #cfd6e4;
+    word-break: break-all;
+    max-height: 160px;
+    overflow: auto;
+    white-space: pre-wrap;
+  }
+
+  .actions {
+    display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;
+  }
+  .btn {
+    appearance: none; border: 1px solid var(--border);
+    background: var(--card-2); color: var(--text);
+    padding: 10px 16px; border-radius: 8px;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: transform .05s, background .15s, border-color .15s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn:hover { background: #262b36; }
+  .btn:active { transform: translateY(1px); }
+  .btn.primary {
+    background: var(--accent); border-color: var(--accent); color: white;
+  }
+  .btn.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+  .btn.success { background: var(--ok); border-color: var(--ok); color: #06210f; }
+  .btn[disabled] { opacity: .55; cursor: not-allowed; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 24px;
+    transform: translateX(-50%) translateY(20px);
+    background: #1f232c; color: var(--text);
+    border: 1px solid var(--border);
+    padding: 10px 14px; border-radius: 8px;
+    font-size: 13px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s, transform .2s;
+    z-index: 100;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .pill {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    font-size: 11px; font-weight: 600;
+    background: rgba(79, 140, 255, 0.15); color: var(--accent-2);
+    border: 1px solid rgba(79, 140, 255, 0.3);
+    margin-left: 6px; vertical-align: middle;
+  }
+
+  .history {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
+  }
+  .history-label {
+    font-size: 11px; color: var(--muted);
+    width: 100%; margin-bottom: 2px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--card-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--text);
+    cursor: pointer;
+    max-width: 100%;
+    transition: background .15s, border-color .15s;
+  }
+  .chip:hover { background: #262b36; border-color: #3a4150; }
+  .chip .addr {
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    max-width: 220px;
+  }
+  .chip .x {
+    color: var(--muted); font-size: 14px; line-height: 1;
+    padding: 0 2px;
+  }
+  .chip .x:hover { color: #ff6b6b; }
+  .clear-link {
+    font-size: 11px; color: var(--muted); cursor: pointer;
+    background: none; border: none; padding: 0;
+    text-decoration: underline;
+  }
+  .clear-link:hover { color: #ff6b6b; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Transfi Buy Link Builder <span class="pill">MiniPay × TransFi</span></h1>
+      <p>Atur <b>walletAddress</b>, URL buy.transfi.com akan dibuat otomatis.</p>
+    </header>
+
+    <section class="card">
+      <h2>Parameter Tetap</h2>
+      <div class="grid">
+        <div class="field">
+          <label>apiKey</label>
+          <div class="static" id="apiKey"></div>
+        </div>
+        <div class="field">
+          <label>cryptoTicker</label>
+          <div class="static" id="cryptoTicker"></div>
+        </div>
+        <div class="field">
+          <label>fiatAmount</label>
+          <div class="static" id="fiatAmount"></div>
+        </div>
+        <div class="field">
+          <label>fiatTicker</label>
+          <div class="static" id="fiatTicker"></div>
+        </div>
+        <div class="field">
+          <label>partnerContext</label>
+          <div class="static" id="partnerContext"></div>
+        </div>
+        <div class="field">
+          <label>paymentCode</label>
+          <div class="static" id="paymentCode"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Input</h2>
+      <div class="field full">
+        <label for="walletAddress">walletAddress</label>
+        <input id="walletAddress" type="text" spellcheck="false" autocomplete="off"
+               placeholder="0x..." />
+        <div class="hint" id="walletHint">Alamat wallet tujuan (contoh: 0x25116e9d...)</div>
+      </div>
+      <div class="history" id="history" hidden>
+        <div class="history-label">
+          <span>Riwayat wallet</span>
+          <button class="clear-link" id="clearHistory">Hapus</button>
+        </div>
+        <div id="historyChips" style="display:contents;"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Hasil URL</h2>
+      <div class="preview" id="urlPreview">—</div>
+      <div class="actions">
+        <button class="btn primary" id="openBtn" disabled>
+          🔗 Buka di Tab Baru
+        </button>
+        <button class="btn" id="copyBtn" disabled>
+          📋 Salin URL
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast">Disalin!</div>
+
+<script>
+  const PARAMS = {
+    apiKey: "ScgxtueGCFjAO2i4",
+    cryptoTicker: "USDTCELO",
+    fiatAmount: "125.00",
+    fiatTicker: "PHP",
+    partnerContext: "80223582592020467",
+    paymentCode: "QRPH",
+  };
+
+  // Render static fields
+  Object.entries(PARAMS).forEach(([k, v]) => {
+    const el = document.getElementById(k);
+    if (el) el.textContent = v;
+  });
+
+  const baseURL = "https://buy.transfi.com/";
+  const walletInput = document.getElementById("walletAddress");
+  const hint = document.getElementById("walletHint");
+  const preview = document.getElementById("urlPreview");
+  const openBtn = document.getElementById("openBtn");
+  const copyBtn = document.getElementById("copyBtn");
+  const toast = document.getElementById("toast");
+  const historyEl = document.getElementById("history");
+  const historyChips = document.getElementById("historyChips");
+  const clearHistoryBtn = document.getElementById("clearHistory");
+
+  const STORAGE_KEY = "transfi.wallets";
+  const MAX_HISTORY = 5;
+  const ETH_RE = /^0x[0-9a-fA-F]{40}$/;
+
+  function loadHistory() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr.filter(ETH_RE.test.bind(ETH_RE)) : [];
+    } catch { return []; }
+  }
+  function saveHistory(arr) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr.slice(0, MAX_HISTORY))); }
+    catch {}
+  }
+  function pushHistory(addr) {
+    const cur = loadHistory().filter(a => a.toLowerCase() !== addr.toLowerCase());
+    cur.unshift(addr);
+    saveHistory(cur);
+    renderHistory();
+  }
+  function removeHistory(addr) {
+    const cur = loadHistory().filter(a => a.toLowerCase() !== addr.toLowerCase());
+    saveHistory(cur);
+    renderHistory();
+  }
+  function shortAddr(a) {
+    return a.slice(0, 6) + "…" + a.slice(-4);
+  }
+  function renderHistory() {
+    const list = loadHistory();
+    historyChips.innerHTML = "";
+    if (list.length === 0) { historyEl.hidden = true; return; }
+    historyEl.hidden = false;
+    list.forEach(addr => {
+      const chip = document.createElement("span");
+      chip.className = "chip";
+      chip.title = addr;
+      chip.innerHTML =
+        '<span class="addr"></span><span class="x" title="Hapus">&times;</span>';
+      chip.querySelector(".addr").textContent = shortAddr(addr);
+      chip.querySelector(".addr").addEventListener("click", () => {
+        walletInput.value = addr;
+        update();
+        walletInput.focus();
+      });
+      chip.querySelector(".x").addEventListener("click", (e) => {
+        e.stopPropagation();
+        removeHistory(addr);
+      });
+      historyChips.appendChild(chip);
+    });
+  }
+  clearHistoryBtn.addEventListener("click", () => {
+    saveHistory([]);
+    renderHistory();
+  });
+
+  // Pre-fill from history
+  const remembered = loadHistory();
+  walletInput.value = remembered[0] || "0x25116e9dd0ca0e9358ffcb2343c8e7d0a7f1f9d6";
+  renderHistory();
+
+  function buildURL(addr) {
+    const q = new URLSearchParams({
+      ...PARAMS,
+      walletAddress: addr,
+    });
+    return baseURL + "?" + q.toString();
+  }
+
+  function update() {
+    const addr = walletInput.value.trim();
+    if (!addr) {
+      preview.textContent = "—";
+      hint.textContent = "Alamat wallet tujuan (contoh: 0x25116e9d...)";
+      hint.classList.remove("error");
+      openBtn.disabled = true;
+      copyBtn.disabled = true;
+      return;
+    }
+    if (!ETH_RE.test(addr)) {
+      preview.textContent = "—";
+      hint.textContent = "Format tidak valid. Harus 0x + 40 karakter hex.";
+      hint.classList.add("error");
+      openBtn.disabled = true;
+      copyBtn.disabled = true;
+      return;
+    }
+    hint.classList.remove("error");
+    hint.textContent = "Alamat valid ✓";
+    const url = buildURL(addr);
+    preview.textContent = url;
+    openBtn.disabled = false;
+    copyBtn.disabled = false;
+  }
+
+  walletInput.addEventListener("input", update);
+
+  openBtn.addEventListener("click", () => {
+    if (openBtn.disabled) return;
+    pushHistory(walletInput.value.trim());
+    window.open(preview.textContent, "_blank", "noopener,noreferrer");
+  });
+
+  copyBtn.addEventListener("click", async () => {
+    if (copyBtn.disabled) return;
+    pushHistory(walletInput.value.trim());
+    try {
+      await navigator.clipboard.writeText(preview.textContent);
+      showToast("URL disalin ke clipboard");
+    } catch {
+      // fallback
+      const ta = document.createElement("textarea");
+      ta.value = preview.textContent;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); showToast("URL disalin"); }
+      catch { showToast("Gagal menyalin"); }
+      ta.remove();
+    }
+  });
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.classList.remove("show"), 1600);
+  }
+
+  update();
+</script>
+</body>
+</html>
