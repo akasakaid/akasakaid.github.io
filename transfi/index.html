@@ -193,6 +193,33 @@
     text-decoration: underline;
   }
   .clear-link:hover { color: #ff6b6b; }
+
+  .profile-bar {
+    display: flex; gap: 6px; padding: 4px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    width: fit-content;
+  }
+  .profile-pill {
+    appearance: none; border: 1px solid transparent;
+    background: transparent; color: var(--muted);
+    padding: 8px 16px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  .profile-pill:hover { color: var(--text); }
+  .profile-pill.active {
+    background: var(--card-2); color: var(--text);
+    border-color: var(--border);
+  }
+  .profile-pill .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--muted);
+  }
+  .profile-pill.active .dot { background: var(--accent); }
 </style>
 </head>
 <body>
@@ -201,6 +228,8 @@
       <h1>Transfi Buy Link Builder <span class="pill">MiniPay × TransFi</span></h1>
       <p>Atur <b>walletAddress</b>, URL buy.transfi.com akan dibuat otomatis.</p>
     </header>
+
+    <div class="profile-bar" id="profileBar"></div>
 
     <section class="card">
       <h2>Parameter Tetap</h2>
@@ -266,20 +295,32 @@
   <div class="toast" id="toast">Disalin!</div>
 
 <script>
-  const PARAMS = {
-    apiKey: "ScgxtueGCFjAO2i4",
-    cryptoTicker: "USDTCELO",
-    fiatAmount: "125.00",
-    fiatTicker: "PHP",
-    partnerContext: "80223582592020467",
-    paymentCode: "QRPH",
+  const PROFILES = {
+    "USDT-CELO": {
+      label: "USDT · Celo",
+      params: {
+        apiKey: "ScgxtueGCFjAO2i4",
+        cryptoTicker: "USDTCELO",
+        fiatAmount: "125.00",
+        fiatTicker: "PHP",
+        partnerContext: "80223582592020467",
+        paymentCode: "QRPH",
+      },
+      defaultWallet: "0x25116e9dd0ca0e9358ffcb2343c8e7d0a7f1f9d6",
+    },
+    "USDC-CELO": {
+      label: "USDC · Celo",
+      params: {
+        apiKey: "ScgxtueGCFjAO2i4",
+        cryptoTicker: "USDCCELO",
+        fiatAmount: "125.00",
+        fiatTicker: "PHP",
+        partnerContext: "80456063131889651",
+        paymentCode: "QRPH",
+      },
+      defaultWallet: "0x2aC9A1EdE5A15490CbDd934E5F47d73c13266aee",
+    },
   };
-
-  // Render static fields
-  Object.entries(PARAMS).forEach(([k, v]) => {
-    const el = document.getElementById(k);
-    if (el) el.textContent = v;
-  });
 
   const baseURL = "https://buy.transfi.com/";
   const walletInput = document.getElementById("walletAddress");
@@ -291,20 +332,26 @@
   const historyEl = document.getElementById("history");
   const historyChips = document.getElementById("historyChips");
   const clearHistoryBtn = document.getElementById("clearHistory");
+  const profileBar = document.getElementById("profileBar");
 
-  const STORAGE_KEY = "transfi.wallets";
+  const STORAGE_KEYS = {
+    history: "transfi.wallets",
+    profile: "transfi.profile",
+  };
   const MAX_HISTORY = 5;
   const ETH_RE = /^0x[0-9a-fA-F]{40}$/;
 
+  let currentProfile = PROFILES["USDT-CELO"];
+
   function loadHistory() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = localStorage.getItem(STORAGE_KEYS.history);
       const arr = raw ? JSON.parse(raw) : [];
       return Array.isArray(arr) ? arr.filter(ETH_RE.test.bind(ETH_RE)) : [];
     } catch { return []; }
   }
   function saveHistory(arr) {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr.slice(0, MAX_HISTORY))); }
+    try { localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(arr.slice(0, MAX_HISTORY))); }
     catch {}
   }
   function pushHistory(addr) {
@@ -350,14 +397,71 @@
     renderHistory();
   });
 
-  // Pre-fill from history
+  function renderStaticFields() {
+    Object.entries(currentProfile.params).forEach(([k, v]) => {
+      const el = document.getElementById(k);
+      if (el) el.textContent = v;
+    });
+  }
+
+  function buildProfileBar() {
+    profileBar.innerHTML = "";
+    Object.entries(PROFILES).forEach(([key, p]) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "profile-pill" + (key === currentProfileKey() ? " active" : "");
+      btn.dataset.key = key;
+      btn.innerHTML = '<span class="dot"></span>' + p.label;
+      btn.addEventListener("click", () => switchProfile(key));
+      profileBar.appendChild(btn);
+    });
+  }
+
+  function currentProfileKey() {
+    return Object.entries(PROFILES).find(([, p]) => p === currentProfile)?.[0]
+      || Object.keys(PROFILES)[0];
+  }
+
+  function switchProfile(key) {
+    if (!PROFILES[key] || PROFILES[key] === currentProfile) return;
+    currentProfile = PROFILES[key];
+    try { localStorage.setItem(STORAGE_KEYS.profile, key); } catch {}
+    renderStaticFields();
+    renderProfileBar();
+    // Reset wallet to this profile's default if input is empty or matches a previous default
+    const list = loadHistory();
+    const inHistory = list.some(a => a.toLowerCase() === walletInput.value.trim().toLowerCase());
+    if (!walletInput.value.trim() || !inHistory) {
+      walletInput.value = currentProfile.defaultWallet;
+    }
+    update();
+  }
+
+  function renderProfileBar() {
+    const activeKey = currentProfileKey();
+    profileBar.querySelectorAll(".profile-pill").forEach(b => {
+      b.classList.toggle("active", b.dataset.key === activeKey);
+    });
+  }
+
+  // Init profile
+  try {
+    const saved = localStorage.getItem(STORAGE_KEYS.profile);
+    if (saved && PROFILES[saved]) currentProfile = PROFILES[saved];
+  } catch {}
+
+  renderStaticFields();
+  buildProfileBar();
+  renderProfileBar();
+
+  // Pre-fill from history (or profile default)
   const remembered = loadHistory();
-  walletInput.value = remembered[0] || "0x25116e9dd0ca0e9358ffcb2343c8e7d0a7f1f9d6";
+  walletInput.value = remembered[0] || currentProfile.defaultWallet;
   renderHistory();
 
   function buildURL(addr) {
     const q = new URLSearchParams({
-      ...PARAMS,
+      ...currentProfile.params,
       walletAddress: addr,
     });
     return baseURL + "?" + q.toString();
