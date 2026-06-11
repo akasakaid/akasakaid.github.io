@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOTP Authenticator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>TOTP Authenticator</h1>
+        
+        <div class="add-secret">
+            <div class="input-with-btn">
+                <input type="text" id="secretKey" placeholder="Secret key (Base32)">
+                <button type="button" id="pasteBtn" class="icon-btn">Paste</button>
+            </div>
+            <button id="addBtn">Add Account</button>
+        </div>
+
+        <div id="accountsList" class="accounts-list"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.3.1/sha.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

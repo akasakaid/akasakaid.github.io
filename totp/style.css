@@ -1,0 +1,191 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #1a1a2e;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.add-secret {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.add-secret input {
+    padding: 12px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background: #16213e;
+    color: #fff;
+    font-size: 14px;
+}
+
+.add-secret input:focus {
+    outline: none;
+    border-color: #0f3460;
+}
+
+.input-with-btn {
+    display: flex;
+    gap: 8px;
+}
+
+.input-with-btn input {
+    flex: 1;
+}
+
+.add-secret button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #e94560;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.icon-btn {
+    padding: 12px 16px;
+    background: #0f3460;
+    border: 1px solid #1a5f7a;
+    border-radius: 8px;
+    color: #00ff88;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.icon-btn:hover {
+    background: #1a5f7a;
+}
+
+.add-secret button:hover {
+    background: #d63d56;
+}
+
+.accounts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.account-card {
+    background: #16213e;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.account-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.account-name {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.account-secret {
+    color: #888;
+    font-size: 12px;
+}
+
+.totp-display {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.code {
+    font-family: 'Courier New', monospace;
+    font-size: 24px;
+    color: #00ff88;
+    letter-spacing: 4px;
+}
+
+.copy-btn {
+    background: transparent;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: #888;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.copy-btn:hover {
+    border-color: #00ff88;
+    color: #00ff88;
+}
+
+.copy-btn.copied {
+    border-color: #00ff88;
+    color: #00ff88;
+}
+
+.delete-btn {
+    background: transparent;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 8px;
+    font-size: 18px;
+}
+
+.delete-btn:hover {
+    color: #e94560;
+}
+
+.progress-ring {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 20px;
+    height: 20px;
+}
+
+.timer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.countdown {
+    color: #888;
+    font-size: 12px;
+    min-width: 24px;
+    text-align: center;
+}
