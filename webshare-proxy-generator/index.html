@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webshare Proxy Generator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: #e8e6df;
+      color: #000;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: #f2f0e9;
+      border: 3px solid #000;
+      border-radius: 0;
+      padding: 32px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 8px 8px 0 #000;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 1.5rem;
+      color: #000;
+      background: #22c55e;
+      border: 3px solid #000;
+      padding: 10px;
+      box-shadow: 4px 4px 0 #000;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #000;
+      text-transform: uppercase;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 3px solid #000;
+      border-radius: 0;
+      background: #f5f3ed;
+      color: #000;
+      font-size: 0.95rem;
+      font-family: 'Courier New', monospace;
+      outline: none;
+      transition: box-shadow 0.2s;
+    }
+
+    input:focus, select:focus {
+      box-shadow: 4px 4px 0 #22c55e;
+    }
+
+    input::placeholder {
+      color: #999;
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .row .form-group {
+      flex: 1;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: 3px solid #000;
+      border-radius: 0;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: 'Courier New', monospace;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+      text-transform: uppercase;
+    }
+
+    button:active {
+      transform: translate(4px, 4px);
+      box-shadow: none;
+    }
+
+    .btn-generate {
+      background: #22c55e;
+      color: #000;
+      margin-top: 8px;
+      box-shadow: 4px 4px 0 #000;
+    }
+
+    .btn-generate:hover {
+      background: #16a34a;
+    }
+
+    .btn-copy {
+      background: #f2f0e9;
+      color: #000;
+      margin-top: 10px;
+      display: none;
+      box-shadow: 4px 4px 0 #000;
+    }
+
+    .btn-copy:hover {
+      background: #dcfce7;
+    }
+
+    .output {
+      margin-top: 20px;
+      background: #e8f5e9;
+      border: 3px solid #000;
+      padding: 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+      color: #166534;
+      box-shadow: 4px 4px 0 #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Webshare Proxy Generator</h1>
+    <div class="form-group">
+      <label for="host">Host</label>
+      <input type="text" id="host" placeholder="p.webshare.io" value="p.webshare.io">
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label for="port">Port</label>
+        <input type="number" id="port" placeholder="80" value="80">
+      </div>
+      <div class="form-group">
+        <label for="type">Tipe Proxy</label>
+        <select id="type">
+          <option value="http">HTTP</option>
+          <option value="socks5">SOCKS5</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="username">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="text" id="password" placeholder="password">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label for="country">Kode Negara (optional)</label>
+        <input type="text" id="country" placeholder="sg, us, id...">
+      </div>
+      <div class="form-group">
+        <label for="total">Total</label>
+        <input type="number" id="total" placeholder="5" min="1">
+      </div>
+    </div>
+    <button class="btn-generate" onclick="generate()">Generate</button>
+    <div class="output" id="output"></div>
+    <button class="btn-copy" id="btnCopy" onclick="copyResult()">Copy</button>
+  </div>
+
+  <script>
+    function generate() {
+      const host = document.getElementById('host').value.trim();
+      const port = document.getElementById('port').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const country = document.getElementById('country').value.trim().toLowerCase();
+      const total = parseInt(document.getElementById('total').value) || 0;
+      const type = document.getElementById('type').value;
+
+      if (!host || !port || !username || !password || !total) {
+        alert('Harap isi semua field yang wajib!');
+        return;
+      }
+
+      const lines = [];
+      for (let i = 1; i <= total; i++) {
+        const user = country
+          ? `${username}-${country}-${i}`
+          : `${username}-${i}`;
+        lines.push(`${type}://${user}:${password}@${host}:${port}`);
+      }
+
+      const output = document.getElementById('output');
+      const btnCopy = document.getElementById('btnCopy');
+      output.textContent = lines.join('\n');
+      output.style.display = 'block';
+      btnCopy.style.display = 'block';
+    }
+
+    function copyResult() {
+      const text = document.getElementById('output').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('btnCopy');
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+      });
+    }
+  </script>
+</body>
+</html>
