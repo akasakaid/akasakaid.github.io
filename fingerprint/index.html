@@ -96,6 +96,12 @@
   Memuat data fingerprint...
 </div>
 
+<!-- User Agent -->
+<div class="section">
+  <h2>User Agent</h2>
+  <div class="row"><span class="key">navigator.userAgent</span><span class="value" id="userAgent">—</span></div>
+</div>
+
 <!-- GPU / Video Card -->
 <div class="section">
   <h2>GPU / Video Card (fin[videoCard])</h2>
@@ -210,6 +216,11 @@ function setText(id, val) {
 function setWarn(id, val, warn) {
   setText(id, val);
   if (warn) document.getElementById(id).classList.add('warning');
+}
+
+// --- User Agent ---
+function getUserAgent() {
+  setText('userAgent', navigator.userAgent || '(empty)');
 }
 
 // --- GPU / WebGL ---
@@ -450,6 +461,7 @@ async function getBattery() {
 
 // --- Refresh ---
 function refreshData() {
+  getUserAgent();
   getViewport();
   getBrowserInfo();
   getHardware();
@@ -461,6 +473,7 @@ function refreshData() {
 // --- Init ---
 async function init() {
   getGPU();
+  getUserAgent();
   getViewport();
   getPlatform();
   getBrowserInfo();
