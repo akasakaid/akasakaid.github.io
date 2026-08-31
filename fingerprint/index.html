@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browser Fingerprint Collector</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0b0b0b;
+    color: #e0e0e0;
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 1.4rem;
+    color: #bfff50;
+    margin-bottom: 5px;
+  }
+  .subtitle {
+    color: #888;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+  .section {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 12px;
+  }
+  .section h2 {
+    font-size: 0.95rem;
+    color: #bfff50;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 6px;
+  }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #222;
+  }
+  .row:last-child { border-bottom: none; }
+  .key {
+    color: #8ab4f8;
+    font-family: monospace;
+    flex-shrink: 0;
+  }
+  .value {
+    color: #e0e0e0;
+    font-family: monospace;
+    text-align: right;
+    word-break: break-all;
+    padding-left: 15px;
+  }
+  .value.empty { color: #666; }
+  .value.warning { color: #ffaa33; }
+  .status {
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 0.85rem;
+  }
+  .status.info { background: #1a2332; color: #8ab4f8; border: 1px solid #2a3a5a; }
+  .status.warn { background: #332a1a; color: #ffaa33; border: 1px solid #5a4a2a; }
+  .status.ok { background: #1a2a1a; color: #bfff50; border: 1px solid #2a5a2a; }
+  .status.error { background: #2a1a1a; color: #ff6666; border: 1px solid #5a2a2a; }
+  .btn {
+    background: #333;
+    color: #e0e0e0;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 5px 5px 5px 0;
+  }
+  .btn:hover { background: #444; }
+</style>
+</head>
+<body>
+
+<h1>Browser Fingerprint Collector</h1>
+<p class="subtitle">
+  Mengumpulkan data fingerprint browser yang umum digunakan untuk verifikasi anti-bot
+</p>
+
+<div id="statusBar" class="status info">
+  Memuat data fingerprint...
+</div>
+
+<!-- GPU / Video Card -->
+<div class="section">
+  <h2>GPU / Video Card (fin[videoCard])</h2>
+  <div class="row"><span class="key">fin[videoCard][vendor]</span><span class="value" id="gpuVendor">—</span></div>
+  <div class="row"><span class="key">fin[videoCard][renderer]</span><span class="value" id="gpuRenderer">—</span></div>
+</div>
+
+<!-- Viewport -->
+<div class="section">
+  <h2>Viewport (fin[viewPort])</h2>
+  <div class="row"><span class="key">fin[viewPort][h]</span><span class="value" id="vpH">—</span></div>
+  <div class="row"><span class="key">fin[viewPort][w]</span><span class="value" id="vpW">—</span></div>
+  <div class="row"><span class="key">fin[viewPort][hM]</span><span class="value" id="vpHM">—</span></div>
+  <div class="row"><span class="key">fin[viewPort][wM]</span><span class="value" id="vpWM">—</span></div>
+</div>
+
+<!-- Platform -->
+<div class="section">
+  <h2>Platform & Display</h2>
+  <div class="row"><span class="key">fin[platform]</span><span class="value" id="platform">—</span></div>
+  <div class="row"><span class="key">fin[dpr]</span><span class="value" id="dpr">—</span></div>
+</div>
+
+<!-- Media Devices -->
+<div class="section">
+  <h2>Media Devices (fin[multi])</h2>
+  <div id="mediaStatus" class="status info" style="margin-bottom:10px;">Menunggu permission...</div>
+  <div class="row"><span class="key">fin[multi][speakers]</span><span class="value" id="speakers">—</span></div>
+  <div class="row"><span class="key">fin[multi][micros]</span><span class="value" id="micros">—</span></div>
+  <div class="row"><span class="key">fin[multi][webcams]</span><span class="value" id="webcams">—</span></div>
+  <div class="row"><span class="key">fin[multi][devices]</span><span class="value" id="devices">—</span></div>
+</div>
+
+<!-- Device Orientation -->
+<div class="section">
+  <h2>Device Orientation (fin[ori])</h2>
+  <div class="row"><span class="key">fin[ori][alpha]</span><span class="value" id="oriAlpha">—</span></div>
+  <div class="row"><span class="key">fin[ori][beta]</span><span class="value" id="oriBeta">—</span></div>
+  <div class="row"><span class="key">fin[ori][gamma]</span><span class="value" id="oriGamma">—</span></div>
+  <div class="row"><span class="key">fin[ori][is]</span><span class="value" id="oriIs">—</span></div>
+</div>
+
+<!-- Click Position -->
+<div class="section">
+  <h2>Click Position (fin[cl]) — klik di mana saja di halaman ini</h2>
+  <div class="row"><span class="key">fin[cl][x]</span><span class="value" id="clX">—</span></div>
+  <div class="row"><span class="key">fin[cl][y]</span><span class="value" id="clY">—</span></div>
+</div>
+
+<!-- Browser Info -->
+<div class="section">
+  <h2>Browser Info</h2>
+  <div class="row"><span class="key">fin[navName]</span><span class="value" id="navName">—</span></div>
+  <div class="row"><span class="key">fin[touch]</span><span class="value" id="touch">—</span></div>
+  <div class="row"><span class="key">fin[c]</span><span class="value" id="chromeVer">—</span></div>
+  <div class="row"><span class="key">fin[webDef]</span><span class="value" id="webDef">—</span></div>
+</div>
+
+<!-- Hardware -->
+<div class="section">
+  <h2>Hardware</h2>
+  <div class="row"><span class="key">fin[memory]</span><span class="value" id="memory">—</span></div>
+  <div class="row"><span class="key">fin[concur]</span><span class="value" id="concur">—</span></div>
+</div>
+
+<!-- Engine / Environment -->
+<div class="section">
+  <h2>Engine / Environment (fin[en])</h2>
+  <div class="row"><span class="key">fin[en][b]</span><span class="value" id="enB">—</span></div>
+  <div class="row"><span class="key">fin[en][m]</span><span class="value" id="enM">—</span></div>
+  <div class="row"><span class="key">fin[en][p]</span><span class="value" id="enP">—</span></div>
+  <div class="row"><span class="key">fin[en][pv]</span><span class="value" id="enPV">—</span></div>
+  <div class="row"><span class="key">fin[en][ar]</span><span class="value" id="enAr">—</span></div>
+</div>
+
+<!-- Battery -->
+<div class="section">
+  <h2>Battery (fin[bat])</h2>
+  <div id="batStatus" class="status info" style="margin-bottom:10px;">Mengambil data batera...</div>
+  <div class="row"><span class="key">fin[bat][charging]</span><span class="value" id="batCharging">—</span></div>
+  <div class="row"><span class="key">fin[bat][lvl]</span><span class="value" id="batLvl">—</span></div>
+</div>
+
+<!-- Version -->
+<div class="section">
+  <h2>Version</h2>
+  <div class="row"><span class="key">fin[v]</span><span class="value" id="finV">2.6</span></div>
+</div>
+
+<button class="btn" onclick="refreshData()">Refresh</button>
+
+<script>
+// ============================================================
+// Browser Fingerprint Collector
+// ============================================================
+
+let lastClickX = 0;
+let lastClickY = 0;
+
+// --- Helper ---
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (val === '' || val === null || val === undefined) {
+    el.classList.add('empty');
+    el.textContent = '(empty)';
+  } else {
+    el.classList.remove('empty');
+    el.textContent = String(val);
+  }
+}
+
+function setWarn(id, val, warn) {
+  setText(id, val);
+  if (warn) document.getElementById(id).classList.add('warning');
+}
+
+// --- GPU / WebGL ---
+function getGPU() {
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (!gl) {
+      setText('gpuVendor', '(no WebGL)');
+      setText('gpuRenderer', '(no WebGL)');
+      return;
+    }
+    const ext = gl.getExtension('WEBGL_debug_renderer_info');
+    if (ext) {
+      setText('gpuVendor', gl.getParameter(ext.UNMASKED_VENDOR_WEBGL));
+      setText('gpuRenderer', gl.getParameter(ext.UNMASKED_RENDERER_WEBGL));
+    } else {
+      setText('gpuVendor', '(blocked)');
+      setText('gpuRenderer', '(blocked)');
+    }
+  } catch(e) {
+    setText('gpuVendor', '(error)');
+    setText('gpuRenderer', '(error)');
+  }
+}
+
+// --- Viewport ---
+function getViewport() {
+  const h = window.innerHeight;
+  const w = window.innerWidth;
+
+  let hM = h, wM = w;
+  try {
+    const mq = window.matchMedia('(max-width: 768px)');
+    if (mq.matches) {
+      hM = window.screen.height;
+      wM = window.screen.width;
+    }
+  } catch(e) {}
+
+  setText('vpH', h);
+  setText('vpW', w);
+  setText('vpHM', hM);
+  setText('vpWM', wM);
+}
+
+// --- Platform ---
+function getPlatform() {
+  setText('platform', navigator.platform || 'Unknown');
+  setText('dpr', window.devicePixelRatio);
+}
+
+// --- Media Devices ---
+async function getMediaDevices() {
+  const statusEl = document.getElementById('mediaStatus');
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const speakers = devices.filter(d => d.kind === 'audiooutput').length;
+    const micros = devices.filter(d => d.kind === 'audioinput').length;
+    const webcams = devices.filter(d => d.kind === 'videoinput').length;
+    const total = devices.length;
+
+    setText('speakers', speakers);
+    setText('micros', micros);
+    setText('webcams', webcams);
+    setText('devices', total);
+
+    const hasLabels = devices.some(d => d.label !== '');
+    if (!hasLabels) {
+      statusEl.className = 'status warn';
+      statusEl.textContent = 'Permission belum diberikan. Label device kosong. Klik tombol di bawah untuk request permission.';
+      statusEl.innerHTML += '<br><button class="btn" style="margin-top:8px;" onclick="requestMediaPermission()">Request Permission</button>';
+    } else {
+      statusEl.className = 'status ok';
+      statusEl.textContent = 'Permission diberikan — semua device terdeteksi.';
+    }
+  } catch(e) {
+    statusEl.className = 'status error';
+    statusEl.textContent = 'Error: ' + e.message;
+    setText('speakers', 0);
+    setText('micros', 0);
+    setText('webcams', 0);
+    setText('devices', 0);
+  }
+}
+
+async function requestMediaPermission() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+    stream.getTracks().forEach(t => t.stop());
+    await getMediaDevices();
+  } catch(e) {
+    document.getElementById('mediaStatus').className = 'status error';
+    document.getElementById('mediaStatus').textContent = 'Permission ditolak: ' + e.message;
+  }
+}
+
+// --- Device Orientation ---
+function getOrientation() {
+  let isSupported = 0;
+  if (window.DeviceOrientationEvent) {
+    isSupported = 1;
+  }
+
+  setText('oriAlpha', 0);
+  setText('oriBeta', 0);
+  setText('oriGamma', 0);
+  setText('oriIs', isSupported);
+
+  if (window.DeviceOrientationEvent) {
+    window.addEventListener('deviceorientation', function(e) {
+      setText('oriAlpha', Math.round(e.alpha || 0));
+      setText('oriBeta', Math.round(e.beta || 0));
+      setText('oriGamma', Math.round(e.gamma || 0));
+    });
+  }
+}
+
+// --- Click Position ---
+function trackClicks() {
+  document.addEventListener('click', function(e) {
+    lastClickX = e.clientX;
+    lastClickY = e.clientY;
+    setText('clX', lastClickX);
+    setText('clY', lastClickY);
+  });
+  setText('clX', 0);
+  setText('clY', 0);
+}
+
+// --- Browser Info ---
+function getBrowserInfo() {
+  setText('navName', navigator.constructor.name || 'Navigator');
+  setText('touch', navigator.maxTouchPoints > 0);
+
+  const ua = navigator.userAgent;
+  let chromeVer = '';
+  const match = ua.match(/Chrom(?:e|ium)\/(\d+)/);
+  if (match) chromeVer = match[1];
+  setWarn('chromeVer', chromeVer, !chromeVer);
+
+  let webDef = false;
+  try {
+    webDef = navigator.userAgent.includes('HeadlessChrome');
+    webDef = webDef || (navigator.webdriver === true);
+  } catch(e) {}
+  setText('webDef', webDef);
+}
+
+// --- Hardware ---
+function getHardware() {
+  setText('memory', navigator.deviceMemory || 0);
+  setText('concur', navigator.hardwareConcurrency || 0);
+}
+
+// --- Engine / Environment ---
+function getEngine() {
+  let b = '', m = '', p = '', pv = '', ar = '';
+
+  if (navigator.userAgentData) {
+    const ua = navigator.userAgentData;
+    b = ua.brands ? (ua.brands.find(x => x.brand === 'Chromium') || {}).version || '' : '';
+
+    if (ua.getHighEntropyValues) {
+      ua.getHighEntropyValues([
+        'architecture', 'bitness', 'model',
+        'platform', 'platformVersion',
+        'uaFullVersion', 'fullVersionList'
+      ]).then(he => {
+        const chromium = (he.fullVersionList || []).find(x => x.brand === 'Chromium');
+        setText('enB', chromium ? chromium.version : b);
+        setText('enM', he.model || '');
+        setText('enP', he.platform || '');
+        setText('enPV', he.platformVersion || '');
+        setText('enAr', he.architecture || '');
+      }).catch(() => {
+        setText('enB', b);
+        setText('enM', '');
+        setText('enP', ua.platform || '');
+        setText('enPV', '');
+        setText('enAr', '');
+      });
+    } else {
+      setText('enB', b);
+      setText('enM', '');
+      setText('enP', ua.platform || '');
+      setText('enPV', '');
+      setText('enAr', '');
+    }
+  } else {
+    const cMatch = navigator.userAgent.match(/Chrom(?:e|ium)\/(\d+)/);
+    b = cMatch ? cMatch[1] : '';
+    if (/Android/.test(navigator.userAgent)) p = 'Android';
+    else if (/Windows/.test(navigator.userAgent)) p = 'Windows';
+    else if (/Mac/.test(navigator.userAgent)) p = 'macOS';
+    else if (/Linux/.test(navigator.userAgent)) p = 'Linux';
+
+    const pvMatch = navigator.userAgent.match(/Android\s+([\d.]+)/);
+    if (pvMatch) pv = pvMatch[1].split('.')[0];
+
+    setText('enB', b);
+    setText('enM', m);
+    setText('enP', p);
+    setText('enPV', pv);
+    setText('enAr', ar);
+  }
+}
+
+// --- Battery ---
+async function getBattery() {
+  const statusEl = document.getElementById('batStatus');
+  try {
+    if (navigator.getBattery) {
+      const battery = await navigator.getBattery();
+      setText('batCharging', battery.charging ? 1 : 0);
+      setText('batLvl', battery.level);
+
+      battery.addEventListener('chargingchange', () => {
+        setText('batCharging', battery.charging ? 1 : 0);
+      });
+      battery.addEventListener('levelchange', () => {
+        setText('batLvl', battery.level);
+      });
+
+      statusEl.className = 'status ok';
+      statusEl.textContent = 'Battery API tersedia.';
+    } else {
+      statusEl.className = 'status warn';
+      statusEl.textContent = 'Battery API tidak tersedia di browser ini.';
+      setText('batCharging', '(n/a)');
+      setText('batLvl', '(n/a)');
+    }
+  } catch(e) {
+    statusEl.className = 'status error';
+    statusEl.textContent = 'Error: ' + e.message;
+  }
+}
+
+// --- Refresh ---
+function refreshData() {
+  getViewport();
+  getBrowserInfo();
+  getHardware();
+  getEngine();
+  getBattery();
+  getMediaDevices();
+}
+
+// --- Init ---
+async function init() {
+  getGPU();
+  getViewport();
+  getPlatform();
+  getBrowserInfo();
+  getHardware();
+  getEngine();
+  getOrientation();
+  trackClicks();
+  await getMediaDevices();
+  await getBattery();
+
+  document.getElementById('statusBar').className = 'status ok';
+  document.getElementById('statusBar').textContent = 'Fingerprint selesai dimuat. Klik di mana saja di halaman untuk update click position.';
+
+  window.addEventListener('resize', () => {
+    getViewport();
+  });
+}
+
+init();
+</script>
+
+</body>
+</html>
